@@ -72,7 +72,7 @@ def:pub app -> JsxElement {
                     <input
                         type="number"
                         value={seed_str}
-                        onChange={lambda e: ChangeEvent { seed_str = e.target.value; }}
+                        onChange={lambda (e: ChangeEvent) -> None { seed_str = e.target.value; }}
                         style={{
                             "width": "80px",
                             "padding": "0.4rem",
@@ -83,7 +83,7 @@ def:pub app -> JsxElement {
                         }}
                     />
                     <button
-                        onClick={lambda e: MouseEvent { runSim(); }}
+                        onClick={lambda (e: MouseEvent) -> None { runSim(); }}
                         style={{
                             "padding": "0.45rem 1.1rem",
                             "borderRadius": "6px",
@@ -97,7 +97,7 @@ def:pub app -> JsxElement {
                         Run
                     </button>
                     <button
-                        onClick={lambda e: MouseEvent { prev(); }}
+                        onClick={lambda (e: MouseEvent) -> None { prev(); }}
                         style={{
                             "padding": "0.45rem 0.8rem",
                             "borderRadius": "6px",
@@ -110,7 +110,7 @@ def:pub app -> JsxElement {
                         &lt;
                     </button>
                     <button
-                        onClick={lambda e: MouseEvent { next(); }}
+                        onClick={lambda (e: MouseEvent) -> None { next(); }}
                         style={{
                             "padding": "0.45rem 0.8rem",
                             "borderRadius": "6px",
@@ -123,19 +123,19 @@ def:pub app -> JsxElement {
                         &gt;
                     </button>
                     <button
-                        onClick={lambda e: MouseEvent { togglePlay(); }}
+                        onClick={lambda (e: MouseEvent) -> None { togglePlay(); }}
                         style={btn_style()}
                     >
                         {("Pause" if playing else "Play")}
                     </button>
                     <button
-                        onClick={lambda e: MouseEvent { restart(); }}
+                        onClick={lambda (e: MouseEvent) -> None { restart(); }}
                         style={btn_style()}
                     >
                         Restart
                     </button>
                     <button
-                        onClick={lambda e: MouseEvent { jumpReplan(); }}
+                        onClick={lambda (e: MouseEvent) -> None { jumpReplan(); }}
                         style={btn_style()}
                     >
                         Jump to replan
@@ -143,26 +143,22 @@ def:pub app -> JsxElement {
                     <span style={{"color": "#94a3b8", "fontSize": "0.85rem"}}>
                         {f"tick {idx} / {len(frames) - 1}"}
                     </span>
-                    {[
+                    {if running {
                         <span style={{"color": "#f59e0b", "fontSize": "0.85rem"}}>running...</span>
-                        for _ in [0]
-                        if running
-                    ]}
-                    {[
+                    }}
+                    {if playing {
                         <span style={{"color": "#22c55e", "fontSize": "0.85rem"}}>playing</span>
-                        for _ in [0]
-                        if playing
-                    ]}
+                    }}
                 </div>
 
-                {[
+                {if len(frames) > 0 {
                     <div>
                         <input
                             type="range"
                             min="0"
                             max={f"{len(frames) - 1}"}
                             value={f"{idx}"}
-                            onChange={lambda e: ChangeEvent { idx = int(e.target.value); }}
+                            onChange={lambda (e: ChangeEvent) -> None { idx = int(e.target.value); }}
                             style={{"width": "100%", "marginBottom": "1rem"}}
                         />
 
@@ -215,11 +211,9 @@ def:pub app -> JsxElement {
                             <span>{f"energy: {frames[idx].energy}"}</span>
                             <span>{f"science: {frames[idx].science}"}</span>
                             <span>{f"status: {frames[idx].status}"}</span>
-                            {[
+                            {if frames[idx].replanned {
                                 <span style={{"color": "#f59e0b", "fontWeight": "700"}}>REPLANNED</span>
-                                for _ in [0]
-                                if frames[idx].replanned
-                            ]}
+                            }}
                         </div>
 
                         <p style={{"fontSize": "0.85rem", "color": "#cbd5e1", "margin": "0.75rem 0"}}>
@@ -271,17 +265,13 @@ def:pub app -> JsxElement {
                             </div>
                         </div>
                     </div>
-                    for _ in [0]
-                    if len(frames) > 0
-                ]}
+                }}
 
-                {[
+                {if len(frames) == 0 {
                     <div style={{"padding": "2rem", "color": "#64748b", "textAlign": "center"}}>
                         Press Run to explore the world.
                     </div>
-                    for _ in [0]
-                    if len(frames) == 0
-                ]}
+                }}
             </div>
         </div>;
 }
