@@ -1,8 +1,8 @@
-"""astral - Server-side agent, simulator, and knowledge graph.
+"""astral - Server-side agent, simulator, and knowledge model.
 
 ASTRAL: an explainable, non-LLM spatial agent. The simulator owns the TRUE
-world (Terrain nodes). The agent owns a separate Belief graph. Only the
-Perceive walker ever reads Terrain; planning and scoring read Belief only.
+world (Terrain). The agent owns a separate Belief model. Only perceive() ever
+reads Terrain; planning and scoring read Belief only.
 """
 
 import math;
@@ -311,7 +311,7 @@ def build_world(seed: int) -> World {
 }
 
 # ---------------------------------------------------------------------------
-# Walker: Perceive (the ONLY reader of true Terrain)
+# Step: Perceive (the ONLY reader of true Terrain)
 # ---------------------------------------------------------------------------
 def perceive(world: World) {
         rover = world.rover[0];
@@ -367,7 +367,7 @@ def perceive(world: World) {
     }
 
 # ---------------------------------------------------------------------------
-# Walker: Evaluate candidate actions with explicit scoring (phase-based)
+# Step: Evaluate candidate actions with explicit scoring (phase-based)
 # ---------------------------------------------------------------------------
 def evaluate(world: World) {
         rover = world.rover[0];
@@ -579,7 +579,7 @@ def evaluate(world: World) {
     }
 
 # ---------------------------------------------------------------------------
-# Walker: Execute the chosen action against the simulator
+# Step: Execute the chosen action against the simulator
 # ---------------------------------------------------------------------------
 def execute(world: World) {
         rover = world.rover[0];
@@ -630,7 +630,7 @@ def execute(world: World) {
     }
 
 # ---------------------------------------------------------------------------
-# Server endpoint: run_sim - orchestrates the full loop, returns Frame nodes
+# Server endpoint: run_sim - orchestrates the full loop, returns Frame records
 # ---------------------------------------------------------------------------
 def:pub run_sim(seed: int, ticks: int) -> list[Frame] {
     world = build_world(seed);
